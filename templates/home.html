@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Início — Hearts & Swords{% endblock %}
+{% block body %}
+  <section class="card">
+    <h1 style="margin:0 0 8px">Paciência RPG — Hearts & Swords</h1>
+    <p class="muted">Vire cartas, enfrente inimigos (♣️♠️), cure-se (♥️) e encontre armas (♦️).
+      Sobreviva ao baralho! Use o D20 para resolver combates.</p>
+    <div class="space"></div>
+    <a class="btn" href="{% url 'play' %}">Começar a jogar</a>
+    <span style="margin-left:8px"></span>
+    <a class="btn secondary" href="{% url 'ranking' %}">Ver Ranking</a>
+  </section>
+
+  <div class="space"></div>
+
+  <section class="grid cols-3">
+    <div class="card"><h3>♣️ / ♠️ Inimigos</h3><p class="muted">Força = valor da carta (J=11, Q=12, K=13, A=14). Ás é boss.</p></div>
+    <div class="card"><h3>♥️ Cura</h3><p class="muted">Pode curar uma vez por turno. Valor base de cura: +3 HP.</p></div>
+    <div class="card"><h3>♦️ Armas</h3><p class="muted">Concedem bônus no ataque (ex.: +1). Some os bônus no D20.</p></div>
+  </section>
+{% endblock %}
