@@ -89,23 +89,19 @@ TEMPLATES = [
 # Caso contrário, usa PostgreSQL com as variáveis PG*.
 if os.getenv("USE_SQLITE", "0") == "1":
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
     }
 else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("PGDATABASE", "paciencia_rpg"),
+            "NAME": os.getenv("PGDATABASE", "hearts_n_swords"),
             "USER": os.getenv("PGUSER", "postgres"),
             "PASSWORD": os.getenv("PGPASSWORD", "postgres"),
             "HOST": os.getenv("PGHOST", "127.0.0.1"),
             "PORT": os.getenv("PGPORT", "5432"),
         }
     }
-
 # --- Validação de senha (padrão Django) ---
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
