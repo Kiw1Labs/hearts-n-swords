@@ -258,3 +258,22 @@ class SubmitScoreView(views.APIView):
 
         EventLog.objects.create(run=run, text=f"Score enviado ao ranking: {player_name} — {obj.points}.")
         return Response({"ok": True, "player_name": player_name, "points": obj.points})
+
+# views.py
+from django.db.models import Max
+from rest_framework import views
+from rest_framework.response import Response
+from .models import Score
+
+class RankingApiView(views.APIView):
+    def get(self, request):
+        mode = request.GET.get("mode","runs")
+        if mode == "best":
+            qs = (Score.objects.values("player_name")
+                  .annotate(points=Max("points"), last_at=Max("created_at"))
+                  .order_by("-points","-last_at"))[:500]
+            return Response(list(qs))
+        qs = (Score.objects
+              .order_by("-points","-created_at")
+              .values("player_name","points","created_at","run_id")[:500])
+        return Response(list(qs))

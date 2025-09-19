@@ -33,13 +33,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
+    "corsheaders",
     # Terceiros
     "rest_framework",
 
     # Apps do projeto
     "game",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://SEU_USUARIO.github.io",
+    "https://SEU_USUARIO.github.io/SEU_REPO",  # project pages
+]
+
 
 # (Opcional) CORS: se quiser usar um front em http://localhost:5173
 # 1) pip install django-cors-headers
@@ -59,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 # --- URLs / WSGI ---

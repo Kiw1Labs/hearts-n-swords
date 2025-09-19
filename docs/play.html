@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hearts & Swords — Jogar</title>
+  <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <div class="left">
+        <div style="font-size:28px">♥️♠️♦️♣️</div>
+        <div class="brand">Hearts & Swords</div>
+      </div>
+      <div class="right">
+        <a href="./index.html" class="btn secondary">Início</a>
+        <a href="./play.html" class="btn secondary">Jogar</a>
+        <a href="./ranking.html" class="btn secondary">Ranking</a>
+        <a href="./contact.html" class="btn">Contato</a>
+      </div>
+    </nav>
+
+    <!-- Controls -->
+    <section class="card">
+      <h2 style="margin:0 0 8px">Jogo</h2>
+      <form id="startForm">
+        <div class="grid cols-3">
+          <label>Seed<br><input id="seed" placeholder="demo-001" style="width:100%"></label>
+          <label>Max HP<br><input id="maxhp" type="number" value="20" min="1" style="width:100%"></label>
+          <div style="display:flex;align-items:flex-end;gap:8px">
+            <button class="btn" type="submit">Iniciar run</button>
+            <button id="refreshBtn" type="button" class="btn secondary">Atualizar</button>
+          </div>
+        </div>
+      </form>
+    </section>
+    <div class="space"></div>
+
+    <!-- HUD -->
+    <section class="card">
+      <div class="kpi">
+        <div class="chip"><strong>Run:</strong> <span id="runId" class="mono">—</span></div>
+        <div class="chip"><strong>HP:</strong> <span id="hp" class="mono">—</span></div>
+        <div class="chip"><strong>Turno:</strong> <span id="turn" class="mono">—</span></div>
+        <div class="chip"><strong>Status:</strong> <span id="status" class="mono">—</span></div>
+        <div class="chip"><strong>Power:</strong> <span id="power" class="mono">0</span></div>
+        <div class="chip"><strong>Score:</strong> <span id="score" class="mono">0</span></div>
+        <div class="chip"><strong>Slots esvaziados:</strong> <span id="emptied" class="mono">0</span>/2</div>
+      </div>
+      <div class="space"></div>
+      <div id="banner"></div>
+      <div class="space"></div>
+      <div id="board" class="grid cols-4"></div>
+      <div class="space"></div>
+      <button id="endTurn" class="btn" disabled>Encerrar turno & Reabastecer</button>
+
+      <div class="space"></div>
+      <div class="card">
+        <h3 style="margin:0 0 8px">Enviar para o Ranking</h3>
+        <div class="grid cols-3">
+          <label>Nome do jogador<br><input id="playerName" placeholder="Seu nome" style="width:100%"></label>
+          <div style="display:flex;align-items:flex-end">
+            <button id="sendScore" class="btn">Enviar</button>
+          </div>
+          <div class="muted" style="display:flex;align-items:flex-end">
+            Envie após finalizar a run (vitória ou derrota).
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="space"></div>
+
+    <!-- Log -->
+    <section class="card">
+      <h3 style="margin:0 0 8px">Log</h3>
+      <div id="log" class="muted"></div>
+    </section>
+  </div>
+
+  <!-- 1) Config da API (define window.API_BASE) -->
+  <script src="./config.js"></script>
+  <!-- 2) JS modules (os mesmos do seu /static/js) -->
+  <script type="module" src="./static/js/main.js"></script>
+</body>
+</html>

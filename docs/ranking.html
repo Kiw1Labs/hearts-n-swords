@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hearts & Swords — Ranking</title>
+  <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <div class="left">
+        <div style="font-size:28px">♥️♠️♦️♣️</div>
+        <div class="brand">Hearts & Swords</div>
+      </div>
+      <div class="right">
+        <a href="./index.html" class="btn secondary">Início</a>
+        <a href="./play.html" class="btn secondary">Jogar</a>
+        <a href="./ranking.html" class="btn secondary">Ranking</a>
+        <a href="./contact.html" class="btn">Contato</a>
+      </div>
+    </nav>
+
+    <section class="card">
+      <h2 style="margin:0 0 8px">Ranking</h2>
+      <div class="space"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="loadMode('runs')">Top runs</button>
+        <button class="btn secondary" onclick="loadMode('best')">Top players (melhor de cada)</button>
+      </div>
+      <div class="space"></div>
+      <div style="overflow:auto">
+        <table id="tbl">
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="./config.js"></script>
+  <script>
+    const BASE = (window.API_BASE ?? '').replace(/\/$/, '');
+    function fmtDate(s){ try{return new Date(s).toLocaleString()}catch{return s||''} }
+
+    async function fetchJSON(url){
+      const res = await fetch(url);
+      if(!res.ok) throw new Error(await res.text());
+      return await res.json();
+    }
+
+    async function loadMode(mode){
+      const data = await fetchJSON(`${BASE}/api/ranking?mode=${encodeURIComponent(mode)}`);
+      const thead = document.getElementById('thead');
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+
+      if(mode==='best'){
+        thead.innerHTML = `<tr><th>#</th><th>Jogador</th><th>Pontos (máximo)</th><th>Último envio</th></tr>`;
+        data.forEach((row, i)=>{
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${i+1}</td><td>${row.player_name}</td><td><strong>${row.points}</strong></td><td class="muted">${fmtDate(row.last_at)}</td>`;
+          tbody.appendChild(tr);
+        });
+      }else{
+        thead.innerHTML = `<tr><th>#</th><th>Jogador</th><th>Pontos</th><th>Run</th><th>Quando</th></tr>`;
+        data.forEach((row, i)=>{
+          const tr = document.createElement('tr');
+          const rid = row.run_id || row.run || '—';
+          tr.innerHTML = `<td>${i+1}</td><td>${row.player_name}</td><td><strong>${row.points}</strong></td><td class="muted mono">${rid}</td><td class="muted">${fmtDate(row.created_at)}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    // inicial
+    loadMode('runs').catch(e=>alert(e.message||e));
+  </script>
+</body>
+</html>

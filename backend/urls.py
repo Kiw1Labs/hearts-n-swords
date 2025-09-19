@@ -5,7 +5,7 @@ from game.views import (
     StartRunView, RunDetailView,
     EquipFromSlotView, DiscardFromSlotView, UseHealFromSlotView,
     FightFromSlotView, PayLifeDiscardView, EndTurnView,
-    SubmitScoreView
+    SubmitScoreView, RankingApiView
 )
 
 urlpatterns = [
@@ -28,4 +28,6 @@ urlpatterns = [
     path("api/run/<uuid:pk>/pay_life/<int:idx>", PayLifeDiscardView.as_view()),
     path("api/run/<uuid:pk>/end_turn", EndTurnView.as_view()),
     path("api/run/<uuid:pk>/score", SubmitScoreView.as_view()),
+    path("api/ranking", RankingApiView.as_view()),
+
 ]
