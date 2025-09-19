@@ -52,6 +52,7 @@ class Roll(models.Model):
     context = models.CharField(max_length=50, default="combat")
     created_at = models.DateTimeField(default=timezone.now)
 
+
 class Score(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     run = models.ForeignKey(Run, on_delete=models.SET_NULL, null=True, blank=True, related_name="scores")
@@ -60,4 +61,11 @@ class Score(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ["-points", "created_at"]
+        ordering = ["-points", "-created_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["run", "player_name"], name="uniq_score_per_run_player")
+        ]
+        indexes = [
+            models.Index(fields=["player_name"]),
+            models.Index(fields=["-points"]),
+        ]

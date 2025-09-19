@@ -45,4 +45,17 @@ export function attachEvents(){
       setRun(run); render(run); log(`Fim do turno. Novo turno: ${run.turn}`);
     }catch(err){ alert(err.message); }
   });
+    // enviar score
+  document.getElementById('sendScore').addEventListener('click', async ()=>{
+    if(!state.id) return alert('Inicie uma run primeiro.');
+    const name = (document.getElementById('playerName').value || 'Jogador').trim().slice(0,30);
+    try{
+      const res = await API.submitScore(state.id, name);
+      log(`Score enviado: ${res.player_name} — ${res.points} pts`);
+      if(confirm('Enviado! Ver ranking agora?')) window.location.href = '/ranking/';
+    }catch(err){
+      alert(err.message);
+    }
+  });
+
 }

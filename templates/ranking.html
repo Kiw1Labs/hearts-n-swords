@@ -3,24 +3,51 @@
 {% block body %}
   <section class="card">
     <h2 style="margin:0 0 8px">Ranking</h2>
-    <p class="muted">Pontuações registradas pelos jogadores.</p>
+    <div class="muted">Veja as melhores pontuações.</div>
     <div class="space"></div>
-    <table>
-      <thead>
-        <tr><th>#</th><th>Jogador</th><th>Pontos</th><th>Quando</th></tr>
-      </thead>
-      <tbody>
-        {% for s in scores %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ s.player_name }}</td>
-          <td><strong>{{ s.points }}</strong></td>
-          <td class="muted">{{ s.created_at }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4" class="muted">Sem pontuações ainda.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+    <div class="grid cols-2">
+      <div>
+        <a href="{% url 'ranking' %}?mode=runs" class="btn {% if mode == 'runs' %}{% else %}secondary{% endif %}">Top runs</a>
+        <a href="{% url 'ranking' %}?mode=best" class="btn {% if mode == 'best' %}{% else %}secondary{% endif %}">Top players (melhor de cada)</a>
+      </div>
+    </div>
+
+    <div class="space"></div>
+
+    {% if mode == 'best' %}
+      <table>
+        <thead><tr><th>#</th><th>Jogador</th><th>Pontos (máximo)</th><th>Último envio</th></tr></thead>
+        <tbody>
+          {% for s in scores %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ s.player_name }}</td>
+            <td><strong>{{ s.points }}</strong></td>
+            <td class="muted">{{ s.last_at }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="muted">Sem pontuações ainda.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <table>
+        <thead><tr><th>#</th><th>Jogador</th><th>Pontos</th><th>Run</th><th>Quando</th></tr></thead>
+        <tbody>
+          {% for s in scores %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ s.player_name }}</td>
+            <td><strong>{{ s.points }}</strong></td>
+            <td class="muted mono">{{ s.run_id|default:"—" }}</td>
+            <td class="muted">{{ s.created_at }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="muted">Sem pontuações ainda.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
   </section>
 {% endblock %}

@@ -237,11 +237,24 @@ class EndTurnView(views.APIView):
         return Response(RunSerializer(run).data)
 
 class SubmitScoreView(views.APIView):
-    """POST /api/run/<uuid>/score  body: {player_name?:str} — salva o score_total atual no ranking"""
+    """POST /api/run/<uuid>/score  body: {player_name?:str}"""
     def post(self, request, pk):
         run = Run.objects.filter(pk=pk).first()
-        if not run: return Response({"detail":"run não encontrada"}, status=404)
+        if not run:
+            return Response({"detail":"run não encontrada"}, status=404)
+
+        allow_ongoing = False  # mude para True se quiser permitir envio antes do fim
+        if not allow_ongoing and run.status == "ongoing":
+            return Response({"detail":"termine a run antes de enviar ao ranking"}, status=400)
+
         player_name = (request.data.get("player_name") or "Jogador").strip()[:30]
-        Score.objects.create(run=run, player_name=player_name, points=run.score_total)
-        EventLog.objects.create(run=run, text=f"Score enviado ao ranking: {player_name} — {run.score_total}.")
-        return Response({"ok": True, "player_name": player_name, "points": run.score_total})
+        obj, created = Score.objects.get_or_create(
+            run=run, player_name=player_name,
+            defaults={"points": run.score_total}
+        )
+        if not created:
+            obj.points = max(obj.points, run.score_total)  # mantém o melhor daquela run+player
+            obj.save(update_fields=["points"])
+
+        EventLog.objects.create(run=run, text=f"Score enviado ao ranking: {player_name} — {obj.points}.")
+        return Response({"ok": True, "player_name": player_name, "points": obj.points})
